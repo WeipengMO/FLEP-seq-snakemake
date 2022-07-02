@@ -102,7 +102,7 @@ rule merge_info:
         'Nanopore'
     shell:
         '''
-export PATH=/scem/work/mowp/anaconda3/envs/R/bin/:$PATH
+export PATH=/public/home/mowp/anaconda3/envs/R/bin:$PATH
 Rscript script/merge_read_info.R --type {params} --inreadinfo {input.read_info} --inadapter {input.adapter} --inpolya {input.polya} --out {output.read_info_result}
         '''
 
@@ -121,7 +121,7 @@ rule splicing_kinetics:
     shell:
         '''
 python script/prepare_data_for_splice_kinetics.py --inreadinfo {input.read_info} --inbed {params.inbed} --out {output.splicing_data}
-export PATH=/scem/work/mowp/anaconda3/envs/R/bin/:$PATH
+export PATH=/public/home/mowp/anaconda3/envs/R/bin:$PATH
 Rscript script/plot_intron_splicing_kinetics.R --inrelpos {output.splicing_data} --inreadinfo {input.read_info} --inintron {params.select_intron} --out {output.splicing_kinetics} --pdf {output.figure}
         '''
 
@@ -137,7 +137,7 @@ rule intron_retention_ratio:
     threads: 1
     shell:
         '''
-export PATH=/scem/work/mowp/anaconda3/envs/R/bin/:$PATH
+export PATH=/public/home/mowp/anaconda3/envs/R/bin:$PATH
 Rscript script/cal_polya_transcript_ir.R --inrelpos {input.splicing_data} --inreadinfo {input.read_info} --outrna {output.rna_ir} --outintron {output.intron_ir}
         '''
 

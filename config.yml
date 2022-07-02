@@ -1,6 +1,8 @@
 # genome
-genome: /scem/work/mowp/db/Arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa
+genome: /data/Zhaijx/mowp/db/Arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa 
 
 # mapping
 mm2thread: 36
 
+# sample
+sample: flep_seq_demo
