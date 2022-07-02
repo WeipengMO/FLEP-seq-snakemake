@@ -1,0 +1,6 @@
+# genome
+genome: /scem/work/mowp/db/Arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa
+
+# mapping
+mm2thread: 36
+
