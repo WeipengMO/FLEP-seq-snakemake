@@ -1,14 +1,7 @@
 '''
-Author: 
+Author:
     windz
-Usage:
-    snakemake -j 15 --cluster 'bsub -J {rulename} -n {threads} -o log/%J.stdout -e log/%J.stderr -R span[hosts=1]' -s flepseq.smk
 '''
-
-# create log dir
-if not os.path.exists('log'):
-    os.mkdir('log')
-
 
 configfile: 'config.yml'
 sample=config['sample']
@@ -28,6 +21,7 @@ rule fastq_to_fasta:
     output:
         'basecalled_data/{sample}.fasta'
     threads: 1
+    conda: 'flepseq'
     shell:
         '''
 python script/fastqdir2fasta.py --indir {input} --out {output}
@@ -42,6 +36,7 @@ rule mapping_to_genome:
     params:
         genome=genome_data
     threads: 36
+    conda: 'flepseq'
     shell:
         '''
 minimap2 -t {threads} -ax splice --secondary=no -G 12000 {params.genome} {input} | samtools sort -@ {threads} -o {output.bam} -
@@ -56,6 +51,7 @@ rule find_3linker:
     output:
         'aligned_data/{sample}.adapter.result.txt'
     threads: 36
+    conda: 'flepseq'
     shell:
         '''
 python script/adapterFinder.py --inbam {input.bam} --inseq {input.fasta} --out {output} --threads {threads} --mode 1
@@ -70,6 +66,7 @@ rule polyacaller:
     output:
         'aligned_data/{sample}.polyA_tail.result.txt'
     threads: 36
+    conda: 'flepseq'
     shell:
         '''
 python script/PolyACaller.py --inadapter {input.adapter_result} --summary {input.sequencing_summary}  --fast5dir {input.fast5_dir} --out {output} --threads {threads}
@@ -84,6 +81,7 @@ rule identify_read_info:
     params:
         'genome_data/exon_intron_pos.repr.bed'
     threads: 1
+    conda: 'flepseq'
     shell:
         '''
 python script/extract_read_info.py --inbed {params} --inbam {input} --out {output}
@@ -100,9 +98,9 @@ rule merge_info:
     threads: 1
     params:
         'Nanopore'
+    conda: 'flepseq'
     shell:
         '''
-export PATH=/public/home/mowp/anaconda3/envs/R/bin:$PATH
 Rscript script/merge_read_info.R --type {params} --inreadinfo {input.read_info} --inadapter {input.adapter} --inpolya {input.polya} --out {output.read_info_result}
         '''
 
@@ -118,10 +116,10 @@ rule splicing_kinetics:
     params:
         inbed='genome_data/exon_intron_pos.repr.bed',
         select_intron='genome_data/select_introns.txt'
+    conda: 'flepseq'
     shell:
         '''
 python script/prepare_data_for_splice_kinetics.py --inreadinfo {input.read_info} --inbed {params.inbed} --out {output.splicing_data}
-export PATH=/public/home/mowp/anaconda3/envs/R/bin:$PATH
 Rscript script/plot_intron_splicing_kinetics.R --inrelpos {output.splicing_data} --inreadinfo {input.read_info} --inintron {params.select_intron} --out {output.splicing_kinetics} --pdf {output.figure}
         '''
 
@@ -135,9 +133,8 @@ rule intron_retention_ratio:
         rna_ir='results/{sample}.read.rna.ir.stat',
         intron_ir='results/{sample}.read.intron.ir.stat',
     threads: 1
+    conda: 'flepseq'
     shell:
         '''
-export PATH=/public/home/mowp/anaconda3/envs/R/bin:$PATH
 Rscript script/cal_polya_transcript_ir.R --inrelpos {input.splicing_data} --inreadinfo {input.read_info} --outrna {output.rna_ir} --outintron {output.intron_ir}
         '''
-

@@ -1,5 +1,8 @@
 minimap2
 pysam
+numpy
+pandas
+samtools
 click
 ont-fast5-api
 joblib

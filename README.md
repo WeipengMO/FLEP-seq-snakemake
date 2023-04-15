@@ -21,6 +21,13 @@ This pipeline includes basecalling and preprocessing of the FLEP-seq data.
   * Tidyverse (https://www.tidyverse.org/)
   * optparse (https://cran.r-project.org/web/packages/optparse/index.html)
 
+**One-step installation**
+
+Install FLEP-seq pipeline, its dependencies, and other required packages in one step using conda or mamba:
+
+```
+mamba create -n flepseq minimap2 pysam click ont-fast5-api joblib r-tidyverse r-optparse samtools pandas
+```
 
 ## Inputs
 
