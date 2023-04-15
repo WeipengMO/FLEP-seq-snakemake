@@ -29,6 +29,13 @@ Install FLEP-seq pipeline, its dependencies, and other required packages in one 
 mamba create -n flepseq minimap2 pysam click ont-fast5-api joblib r-tidyverse r-optparse samtools pandas
 ```
 
+## Quick start
+
+Below is the commands for FLEP-seq pipeline in one-step: 
+```
+snakemake --profile lsf --use-conda
+```
+
 ## Inputs
 
 | File format | Information contained in file | File description | 
